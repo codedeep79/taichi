@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rotate Effect of Tai Chi Figure with HTML, CSS, Javascript</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        body {
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas" width="600" height="600"></canvas>
+</body>
+<script>
+    let canvas = document.querySelector("#canvas"),
+        ctx = canvas.getContext('2d'),
+        cw = canvas.width,
+        ch = canvas.height,
+        angle = 40,
+        hue = 200,
+        speed = 0.01;
+
+    function Taiji() {
+        this.color_str = "hsla(" + hue + ",100%,50%,1)"
+
+        ctx.fillStyle = '#fff';
+        ctx.fillRect(0, 0, cw, ch);
+        ctx.lineWidth = 10;
+
+        ctx.save();
+        ctx.translate(cw / 2, ch / 2);
+
+        ctx.rotate(angle);
+
+        ctx.fillStyle = this.color_str;
+        ctx.beginPath();
+        ctx.arc(0, 0, cw / 2 - 10, 0, Math.PI, true);
+        ctx.fill();
+        ctx.closePath();
+
+        ctx.fillStyle = "white";
+        ctx.beginPath();
+        ctx.arc(0, 0, cw / 2 - 10, 0, Math.PI);
+        ctx.fill();
+        ctx.closePath();
+
+        ctx.fillStyle = this.color_str;
+        ctx.beginPath();
+        ctx.arc(145, -0.6, 145, 0, Math.PI, false);
+        ctx.fill();
+        ctx.closePath();
+
+        ctx.fillStyle = "white";
+        ctx.beginPath();
+        ctx.arc(-145, 0.6, 145, 0, Math.PI, true);
+        ctx.fill();
+        ctx.closePath();
+
+        ctx.fillStyle = this.color_str;
+        ctx.beginPath();
+        ctx.arc(-145, 0.6, 35, 0, Math.PI * 2, true);
+        ctx.fill();
+        ctx.closePath();
+
+        ctx.fillStyle = "white";
+        ctx.beginPath();
+        ctx.arc(145, -0.6, 35, 0, Math.PI * 2, true);
+        ctx.fill();
+        ctx.closePath();
+
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = '#999';
+        ctx.beginPath();
+        ctx.arc(0, 0, cw / 2 - 10, 0, Math.PI * 2, false);
+        ctx.stroke();
+        ctx.closePath();
+
+        ctx.restore();
+
+        angle += speed
+
+    }
+
+    setInterval(Taiji, 100);
+
+    function windowPoint2Canvas(c, x, y) {
+        let canvasBox = c.getBoundingClientRect();
+        let canvas_x = Math.abs(x - canvasBox.left);
+        let canvas_y = Math.abs(y - canvasBox.top);
+        return { x: canvas_x, y: canvas_y };
+    }
+
+    canvas.addEventListener("mousemove", function (e) {
+        let canvasPoint = windowPoint2Canvas(canvas, e.clientX, e.clientY);
+        let mouse_x = canvasPoint.x;
+        let mouse_y = canvasPoint.y;
+        let distance = Math.floor(Math.sqrt(Math.pow(mouse_x - cw / 2, 2) + Math.pow(mouse_y - ch / 2, 2)));
+        speed = distance / 1000;
+        hue += 0.5;
+    })
+</script>
+
+</html>
